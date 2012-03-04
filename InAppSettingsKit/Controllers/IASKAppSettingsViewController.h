@@ -63,6 +63,7 @@
 @property (nonatomic, assign) BOOL showCreditsFooter;
 @property (nonatomic, assign) BOOL showDoneButton;
 
++ (void)setApplicationDefaultPreferences;
 - (void)synchronizeSettings;
 - (IBAction)dismiss:(id)sender;
 
