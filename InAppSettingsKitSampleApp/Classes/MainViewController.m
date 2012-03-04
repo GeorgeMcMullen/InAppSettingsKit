@@ -81,7 +81,7 @@
 #pragma mark IASKAppSettingsViewControllerDelegate protocol
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
 
-    // We propablt should perform a test on sender to see if it came from a modal view or popover
+    // We propably should perform a test on sender to see if it came from a modal view or popover
     
     [self dismissModalViewControllerAnimated:YES];
 
