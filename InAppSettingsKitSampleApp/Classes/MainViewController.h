@@ -17,13 +17,16 @@
 
 #import "IASKAppSettingsViewController.h"
 
-@interface MainViewController : UIViewController <IASKSettingsDelegate, UITextViewDelegate> { 
+@interface MainViewController : UIViewController <IASKSettingsDelegate, UITextViewDelegate, UIPopoverControllerDelegate> { 
     IASKAppSettingsViewController *appSettingsViewController;
+    UIPopoverController *appSettingsPopoverController;
 }
 
 @property (nonatomic, retain) IASKAppSettingsViewController *appSettingsViewController;
+@property (nonatomic, retain) UIPopoverController *appSettingsPopoverController;
 
 - (IBAction)showSettingsPush:(id)sender;
 - (IBAction)showSettingsModal:(id)sender;
+- (IBAction)showSettingsPopover:(id)sender;
 
 @end

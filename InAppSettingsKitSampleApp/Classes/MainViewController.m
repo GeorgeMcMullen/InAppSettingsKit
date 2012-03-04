@@ -27,6 +27,7 @@
 @implementation MainViewController
 
 @synthesize appSettingsViewController;
+@synthesize appSettingsPopoverController;
 
 - (IASKAppSettingsViewController*)appSettingsViewController {
 	if (!appSettingsViewController) {
@@ -52,11 +53,42 @@
     [aNavController release];
 }
 
+- (IBAction)showSettingsPopover:(id)sender
+{
+    UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:self.appSettingsViewController];
+    //[viewController setShowCreditsFooter:NO];   // Uncomment to not display InAppSettingsKit credits for creators.
+    // But we encourage you not to uncomment. Thank you!
+    self.appSettingsViewController.showDoneButton = YES;
+    
+    self.appSettingsPopoverController = [[[UIPopoverController alloc] initWithContentViewController:aNavController] autorelease];
+    appSettingsPopoverController.delegate = self;
+
+    [self.appSettingsPopoverController presentPopoverFromBarButtonItem:sender 
+                                              permittedArrowDirections:UIPopoverArrowDirectionAny
+                                                              animated:YES];
+}
+
+#pragma mark -
+#pragma mark UIPopoverControllerDelegate protocol
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
+{
+    // This gets called whenever someone taps anywhere outside the popover
+    
+	// your code here to reconfigure the app for changed settings
+}
+
 #pragma mark -
 #pragma mark IASKAppSettingsViewControllerDelegate protocol
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
+
+    // We propablt should perform a test on sender to see if it came from a modal view or popover
+    
     [self dismissModalViewControllerAnimated:YES];
-	
+
+    [self.appSettingsPopoverController dismissPopoverAnimated:YES];
+    // Since we dismissed it, we need to manually call the popoverControllerDidDismissPopover, since it won't get called automatically
+    [self popoverControllerDidDismissPopover:nil];
+
 	// your code here to reconfigure the app for changed settings
 }
 
@@ -136,9 +168,23 @@
 	}
 }
 
- - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-	 return YES;
- }
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return YES;
+}
+
+- (void)viewDidLoad {
+    // This will add the settings button to the toolbar for the popover
+    [[self navigationItem] setRightBarButtonItem:[[[UIBarButtonItem alloc] 
+                                                   initWithTitle:@"Settings" 
+                                                   style:UIBarButtonItemStyleBordered 
+                                                   target:self
+                                                   action:@selector(showSettingsPopover:)] autorelease]];
+    
+    // This should really go into the App Delegate, but since the main view controller loads the IASKAppSettingsViewController already
+    // it is easier to implement here instead. This should only loaded once an app launch, and additional code to check whether or not
+    // the app has already set defaults can be done prior to running this as well.
+    [IASKAppSettingsViewController setApplicationDefaultPreferences];
+}
 
 - (void)didReceiveMemoryWarning {
 	// Releases the view if it doesn't have a superview.
@@ -149,6 +195,9 @@
 }
 
 - (void)dealloc {
+    [appSettingsPopoverController release];
+    appSettingsPopoverController = nil;
+    
 	[appSettingsViewController release];
 	appSettingsViewController = nil;
 	
