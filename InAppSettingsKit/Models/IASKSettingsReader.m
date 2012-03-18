@@ -33,6 +33,55 @@ bundlePath=_bundlePath,
 settingsBundle=_settingsBundle, 
 dataSource=_dataSource;
 
+//
+// setApplicationDefaultPreferences will read through the settings bundle files
+// and set default values so your app doesn't have to guess (George McMullen)
+//
++ (void)setApplicationDefaultPreferences
+{
+    //use the shared defaults object
+    NSUserDefaults *nsUserDefaults = [NSUserDefaults standardUserDefaults];
+    
+    NSMutableArray *settingsFilesArray=[[NSMutableArray alloc] init];
+    [settingsFilesArray addObject:@"Root"];
+    
+    for (int i=0; i<[settingsFilesArray count]; i++) {        
+        IASKSettingsReader *settingsReader=[[IASKSettingsReader alloc] initWithFile:[settingsFilesArray objectAtIndex:i]];
+        
+    	NSArray *preferenceSpecifiers	= [settingsReader.settingsBundle objectForKey:kIASKPreferenceSpecifiers];
+        
+        for (NSDictionary *specifier in preferenceSpecifiers) {
+            // We check if there is a child pane specifier and that it isn't one of the special classes of IASK, we are only looking for additional PLists
+            if (([(NSString*)[specifier objectForKey:kIASKType] isEqualToString:kIASKPSChildPaneSpecifier]) && ([specifier objectForKey:kIASKViewControllerClass] == nil)) {
+                // When we find kIASKPSChildPaneSpecifier, then look at the key kIASKFile and add to array (if it doesn't already exist)
+                NSString *file=(NSString*)[specifier objectForKey:kIASKFile];
+                if (file) // We don't want a NULL object here, because it will crash the addObject
+                {
+                    [settingsFilesArray addObject:file];
+                }
+            }
+            else {
+                //get the item key, if there is no key then we can skip it
+                NSString *key = [specifier objectForKey:kIASKKey];
+                if (key) {
+                    //check to see if the value and default value are set
+                    //if a default value exists and the value is not set, use the default
+                    id value = [nsUserDefaults objectForKey:key];
+                    id defaultValue = [specifier objectForKey:kIASKDefaultValue];
+                    if(defaultValue && !value) {
+                        [nsUserDefaults setObject:defaultValue forKey:key];
+                    }
+                }
+            }
+        }
+        
+    }
+    //write the changes to disk
+    [nsUserDefaults synchronize];
+    
+    [settingsFilesArray release];
+}
+
 - (id)init {
 	return [self initWithFile:@"Root"];
 }

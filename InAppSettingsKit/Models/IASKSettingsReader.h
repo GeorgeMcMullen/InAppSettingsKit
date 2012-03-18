@@ -123,6 +123,8 @@ __VA_ARGS__ \
     NSBundle        *_bundle;
 }
 
++ (void)setApplicationDefaultPreferences;
+
 - (id)initWithFile:(NSString*)file;
 - (NSInteger)numberOfSections;
 - (NSInteger)numberOfRowsForSection:(NSInteger)section;

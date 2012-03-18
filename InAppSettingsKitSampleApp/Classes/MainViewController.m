@@ -183,7 +183,7 @@
     // This should really go into the App Delegate, but since the main view controller loads the IASKAppSettingsViewController already
     // it is easier to implement here instead. This should only loaded once an app launch, and additional code to check whether or not
     // the app has already set defaults can be done prior to running this as well.
-    [IASKAppSettingsViewController setApplicationDefaultPreferences];
+    [IASKSettingsReader setApplicationDefaultPreferences];
 }
 
 - (void)didReceiveMemoryWarning {
