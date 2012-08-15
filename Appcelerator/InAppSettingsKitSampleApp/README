@@ -1,0 +1,30 @@
+InAppSettingsKit for Appcelerator Titanium
+==========================================
+
+InAppSettingsKit is an awesome library and makes application settings management a breeze. I've been doing some work with Appcelerator Titanium and thought that adding this functionality to an iOS Appcelerator project would be great. Too bad it won't work on Web and Android!
+
+This project comes in multiple parts. First and foremost, there is the Appcelerator module. This in turn uses the code base and XIBs of InAppSettingsKit. Finally there is the test app that will enable you to see how to instantiate IASK from within an Appcelerator app.
+
+To use this with a project, you first compile the module using the "Publish" button and selecting "Package - IOS Module". It will ask you if you want to place the module in your Titanium directory or a specific project directory. I find that if you are sharing code, it helps to have it in the project so that not everybody has to recompile the module. Then you compile and run your project.
+
+There are quite a few caveats with using this. It's not 100% yet, but it should be a good start for someone who might be desparate enough to need it.
+
+- Not everything is implemented yet. The only real implemenation done so far is opening the IASK interface in a modal popup. Push, tab bar, and popover initializations are not done yet (and might not be able to be done, depending on the capabilities of the Appcelerator module SDK).
+- Callbacks to the delegate to get things like custom cells, custom view controllers, icons, etc. Are still done in the module and not back in the app. This means that if you want to customize things, you have to recompile the module.
+- For some reason, the NIBs need to be included in your project under Resources/iphone. If you put them in the assets directory of the module, they won't show up.
+- Any XIBs that you change or add (for custom view controllers, etc.) will need to be precompiled into NIBs and included with your project.
+
+I intend to clean up the licensing and copyright stuff as this matures, but for all intents and purposes this project inherits the same license and copyright as the original InAppSettingsKit.
+
+- George McMullen
+
+----------------------------------
+Stuff our legal folk make us say:
+
+Appcelerator, Appcelerator Titanium and associated marks and logos are 
+trademarks of Appcelerator, Inc. 
+
+Titanium is Copyright (c) 2009-2012 by Appcelerator, Inc. All Rights Reserved.
+
+Titanium is licensed under the Apache Public License (Version 2). Please
+see the LICENSE file for the full license.

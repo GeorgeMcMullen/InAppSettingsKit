@@ -1,0 +1,18 @@
+#
+# this is your module manifest and used by Titanium
+# during compilation, packaging, distribution, etc.
+#
+version: 1.0
+apiversion: 2
+description: This module enables InAppSettingsKit to be used within Appcelerator Titanium projects. InAppSettingsKit is an open source solution to to easily add in-app settings to your iPhone apps. It uses a hybrid approach by maintaining the Settings.app pane. So the user has the choice where to change the settings. More details about the history of this development on the FutureTap Blog and the Edovia Blog.
+author: Edovia / FutureTap / George McMullen
+license: Copyright (c) 2009-2010
+copyright: Copyright (c) 2009-2010 Edovia / FutureTap
+
+
+# these should not be edited
+name: inappsettingskit
+moduleid: com.inappsettingskit.inappsettingskit
+guid: 0e715eb6-95fc-4096-b545-38b2f29f1479
+platform: iphone
+minsdk: 2.1.0.GA

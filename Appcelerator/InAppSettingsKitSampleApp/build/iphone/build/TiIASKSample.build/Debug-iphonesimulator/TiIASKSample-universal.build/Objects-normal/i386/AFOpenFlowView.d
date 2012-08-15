@@ -1,0 +1,6 @@
+dependencies: \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/AFOpenFlow/AFOpenFlowView.m \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/AFOpenFlow/AFOpenFlowView.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/AFOpenFlow/AFItemView.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/AFOpenFlow/AFOpenFlowConstants.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/AFOpenFlow/AFUIImageReflection.h

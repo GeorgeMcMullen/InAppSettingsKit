@@ -1,0 +1,6 @@
+dependencies: \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/FBConnect/Facebook.m \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/FBConnect/Facebook.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/FBConnect/FBLoginDialog.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/FBConnect/FBDialog.h \
+  /Volumes/Macintosh\ HD/Users/george/Documents/Projects/QuixonicUnfuddle/qxnc_qxncproducts/trunk/QuixonicKernel/External/SVNIgnore/GitHub/InAppSettingsKit/Appcelerator/InAppSettingsKitSampleApp/build/iphone/Classes/FBConnect/FBRequest.h
