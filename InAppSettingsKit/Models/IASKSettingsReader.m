@@ -17,7 +17,7 @@
 #import "IASKSettingsReader.h"
 #import "IASKSpecifier.h"
 
-@interface IASKSettingsReader (private)
+@interface IASKSettingsReader (Private)
 - (void)_reinterpretBundle:(NSDictionary*)settingsBundle;
 - (BOOL)_sectionHasHeading:(NSInteger)section;
 - (NSString *)platformSuffix;
