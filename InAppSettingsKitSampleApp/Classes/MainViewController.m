@@ -98,6 +98,10 @@
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
     [self dismissModalViewControllerAnimated:YES];
 
+    [self.appSettingsPopoverController dismissPopoverAnimated:YES];
+    // Since we dismissed it, we need to manually call the popoverControllerDidDismissPopover, since it won't get called automatically
+    [self popoverControllerDidDismissPopover:nil];
+
 	// your code here to reconfigure the app for changed settings
 }
 
