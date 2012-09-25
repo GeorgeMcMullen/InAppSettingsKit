@@ -24,15 +24,21 @@
 
 #import "CustomViewCell.h"
 
+@interface MainViewController() 
+- (void)settingDidChange:(NSNotification*)notification;
+@end
+
 @implementation MainViewController
 
-@synthesize appSettingsViewController;
 @synthesize appSettingsPopoverController;
+@synthesize appSettingsViewController, tabAppSettingsViewController;
 
 - (IASKAppSettingsViewController*)appSettingsViewController {
 	if (!appSettingsViewController) {
-		appSettingsViewController = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
+		appSettingsViewController = [[IASKAppSettingsViewController alloc] init];
 		appSettingsViewController.delegate = self;
+		BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"AutoConnect"];
+		appSettingsViewController.hiddenKeys = enabled ? nil : [NSSet setWithObjects:@"AutoConnectLogin", @"AutoConnectPassword", @"version", @"copyright", @"customCell2", @"customCellHeader", nil];
 	}
 	return appSettingsViewController;
 }
@@ -55,11 +61,11 @@
 
 - (IBAction)showSettingsPopover:(id)sender
 {
+    self.appSettingsViewController.showDoneButton = YES;
     UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:self.appSettingsViewController];
     //[viewController setShowCreditsFooter:NO];   // Uncomment to not display InAppSettingsKit credits for creators.
     // But we encourage you not to uncomment. Thank you!
-    self.appSettingsViewController.showDoneButton = YES;
-    
+
     self.appSettingsPopoverController = [[[UIPopoverController alloc] initWithContentViewController:aNavController] autorelease];
     appSettingsPopoverController.delegate = self;
 
@@ -68,32 +74,35 @@
                                                               animated:YES];
 }
 
+- (void)awakeFromNib {
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(settingDidChange:) name:kIASKAppSettingChanged object:nil];
+	BOOL enabled = [[NSUserDefaults standardUserDefaults] boolForKey:@"AutoConnect"];
+	self.tabAppSettingsViewController.hiddenKeys = enabled ? nil : [NSSet setWithObjects:@"AutoConnectLogin", @"AutoConnectPassword", @"version", @"copyright", @"customCell2", @"customCellHeader", nil];
+
+	if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
+		self.navigationItem.rightBarButtonItem = [[[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(showSettingsPopover:)] autorelease];
+	}
+}
+
 #pragma mark -
 #pragma mark UIPopoverControllerDelegate protocol
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController
 {
     // This gets called whenever someone taps anywhere outside the popover
-    
+
 	// your code here to reconfigure the app for changed settings
 }
 
 #pragma mark -
 #pragma mark IASKAppSettingsViewControllerDelegate protocol
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
-
-    // We propably should perform a test on sender to see if it came from a modal view or popover
-    
     [self dismissModalViewControllerAnimated:YES];
-
-    [self.appSettingsPopoverController dismissPopoverAnimated:YES];
-    // Since we dismissed it, we need to manually call the popoverControllerDidDismissPopover, since it won't get called automatically
-    [self popoverControllerDidDismissPopover:nil];
 
 	// your code here to reconfigure the app for changed settings
 }
 
 // optional delegate method for handling mail sending result
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+- (void)settingsViewController:(id<IASKViewController>)settingsViewController mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
        
     if ( error != nil ) {
         // handle error here
@@ -112,20 +121,41 @@
         // ...
     }
 }
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderForKey:(NSString*)key {
+- (CGFloat)settingsViewController:(id<IASKViewController>)settingsViewContoller 
+                        tableView:(UITableView *)tableView 
+        heightForHeaderForSection:(NSInteger)section {
+  NSString* key = [settingsViewContoller.settingsReader keyForSection:section];
 	if ([key isEqualToString:@"IASKLogo"]) {
 		return [UIImage imageNamed:@"Icon.png"].size.height + 25;
-	}
+	} else if ([key isEqualToString:@"IASKCustomHeaderStyle"]) {
+		return 55.f;    
+  }
 	return 0;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderForKey:(NSString*)key {
+- (UIView *)settingsViewController:(id<IASKViewController>)settingsViewContoller 
+                         tableView:(UITableView *)tableView 
+               viewForHeaderForSection:(NSInteger)section {
+  NSString* key = [settingsViewContoller.settingsReader keyForSection:section];
 	if ([key isEqualToString:@"IASKLogo"]) {
 		UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Icon.png"]];
 		imageView.contentMode = UIViewContentModeCenter;
 		return [imageView autorelease];
-	}
+	} else if ([key isEqualToString:@"IASKCustomHeaderStyle"]) {
+    UILabel* label = [[UILabel alloc] initWithFrame:CGRectZero];
+    label.backgroundColor = [UIColor clearColor];
+    label.textAlignment = UITextAlignmentCenter;
+    label.textColor = [UIColor redColor];
+    label.shadowColor = [UIColor whiteColor];
+    label.shadowOffset = CGSizeMake(0, 1);
+    label.numberOfLines = 0;
+    label.font = [UIFont boldSystemFontOfSize:16.f];
+    
+    //figure out the title from settingsbundle
+    label.text = [settingsViewContoller.settingsReader titleForSection:section];
+    
+    return [label autorelease];
+  }
 	return nil;
 }
 
@@ -151,6 +181,15 @@
 	return cell;
 }
 
+#pragma mark kIASKAppSettingChanged notification
+- (void)settingDidChange:(NSNotification*)notification {
+	if ([notification.object isEqual:@"AutoConnect"]) {
+		IASKAppSettingsViewController *activeController = self.tabBarController.selectedIndex ? self.tabAppSettingsViewController : self.appSettingsViewController;
+		BOOL enabled = (BOOL)[[notification.userInfo objectForKey:@"AutoConnect"] intValue];
+		[activeController setHiddenKeys:enabled ? nil : [NSSet setWithObjects:@"AutoConnectLogin", @"AutoConnectPassword", @"version", @"copyright", @"customCell2", @"customCellHeader", nil] animated:YES];
+	}
+}
+
 #pragma mark UITextViewDelegate (for CustomViewCell)
 - (void)textViewDidChange:(UITextView *)textView {
     [[NSUserDefaults standardUserDefaults] setObject:textView.text forKey:@"customCell"];
@@ -158,13 +197,13 @@
 }
 
 #pragma mark -
-- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForKey:(NSString*)key {
-	if ([key isEqualToString:@"ButtonDemoAction1"]) {
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
+	if ([specifier.key isEqualToString:@"ButtonDemoAction1"]) {
 		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Demo Action 1 called" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
 		[alert show];
-	} else {
-		UIAlertView *alert = [[[UIAlertView alloc] initWithTitle:@"Demo Action 2 called" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil] autorelease];
-		[alert show];
+	} else if ([specifier.key isEqualToString:@"ButtonDemoAction2"]) {
+		NSString *newTitle = [[[NSUserDefaults standardUserDefaults] objectForKey:specifier.key] isEqualToString:@"Logout"] ? @"Login" : @"Logout";
+		[[NSUserDefaults standardUserDefaults] setObject:newTitle forKey:specifier.key];
 	}
 }
 
@@ -200,6 +239,8 @@
     
 	[appSettingsViewController release];
 	appSettingsViewController = nil;
+	[tabAppSettingsViewController release];
+	tabAppSettingsViewController = nil;
 	
     [super dealloc];
 }

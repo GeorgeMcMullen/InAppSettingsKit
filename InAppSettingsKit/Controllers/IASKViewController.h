@@ -1,5 +1,5 @@
 //
-//  IASKPSToggleSwitchSpecifierViewCell.h
+//  IASKAppSettingsViewController.h
 //  http://www.inappsettingskit.com
 //
 //  Copyright (c) 2009:
@@ -14,16 +14,13 @@
 //  This code is licensed under the BSD license that is available at: http://www.opensource.org/licenses/bsd-license.php
 //
 
-#import <UIKit/UIKit.h>
+@class IASKSettingsReader;
+@protocol IASKSettingsStore;
 
-@class IASKSwitch;
+// protocol all IASK view controllers implement
+@protocol IASKViewController <NSObject>
 
-@interface IASKPSToggleSwitchSpecifierViewCell : UITableViewCell {
-    UILabel *_label;
-    IASKSwitch *_toggle;
-}
-
-@property (nonatomic, assign) IBOutlet UILabel *label;
-@property (nonatomic, assign) IBOutlet IASKSwitch *toggle;
+@property (nonatomic, retain) IASKSettingsReader* settingsReader;
+@property (nonatomic, retain) id<IASKSettingsStore> settingsStore;
 
 @end

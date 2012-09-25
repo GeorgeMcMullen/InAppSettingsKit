@@ -18,6 +18,7 @@
 #import <MessageUI/MessageUI.h>
 
 #import "IASKSettingsStore.h"
+#import "IASKViewController.h"
 
 @class IASKSettingsReader;
 @class IASKAppSettingsViewController;
@@ -25,26 +26,43 @@
 
 @protocol IASKSettingsDelegate
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender;
-@optional
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderForKey:(NSString*)key;
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderForKey:(NSString*)key;
 
+@optional
+#pragma mark - UITableView header customization
+- (CGFloat) settingsViewController:(id<IASKViewController>)settingsViewController
+                         tableView:(UITableView *)tableView 
+         heightForHeaderForSection:(NSInteger)section;
+- (UIView *) settingsViewController:(id<IASKViewController>)settingsViewController
+                          tableView:(UITableView *)tableView 
+            viewForHeaderForSection:(NSInteger)section;
+
+#pragma mark - UITableView cell customization
 - (CGFloat)tableView:(UITableView*)tableView heightForSpecifier:(IASKSpecifier*)specifier;
 - (UITableViewCell*)tableView:(UITableView*)tableView cellForSpecifier:(IASKSpecifier*)specifier;
 
-- (NSString*)mailComposeBody;
-- (UIViewController<MFMailComposeViewControllerDelegate>*)viewControllerForMailComposeView;
-- (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error;
+#pragma mark - mail composing customization
+- (NSString*) settingsViewController:(id<IASKViewController>)settingsViewController 
+         mailComposeBodyForSpecifier:(IASKSpecifier*) specifier;
 
-- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForKey:(NSString*)key;
+- (UIViewController<MFMailComposeViewControllerDelegate>*) settingsViewController:(id<IASKViewController>)settingsViewController
+                                     viewControllerForMailComposeViewForSpecifier:(IASKSpecifier*) specifier;
+
+- (void) settingsViewController:(id<IASKViewController>) settingsViewController
+          mailComposeController:(MFMailComposeViewController*)controller 
+            didFinishWithResult:(MFMailComposeResult)result 
+                          error:(NSError*)error;
+
+#pragma mark - respond to button taps
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForKey:(NSString*)key __attribute__((deprecated)); // use the method below with specifier instead
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier;
+- (void)settingsViewController:(IASKAppSettingsViewController*)sender tableView:(UITableView *)tableView didSelectCustomViewSpecifier:(IASKSpecifier*)specifier;
 @end
 
 
-@interface IASKAppSettingsViewController : UITableViewController <UITextFieldDelegate, UINavigationControllerDelegate, MFMailComposeViewControllerDelegate> {
+@interface IASKAppSettingsViewController : UITableViewController <IASKViewController, UITextFieldDelegate, MFMailComposeViewControllerDelegate> {
 	id<IASKSettingsDelegate>  _delegate;
     
     NSMutableArray          *_viewList;
-    NSIndexPath             *_currentIndexPath;
 	
 	IASKSettingsReader		*_settingsReader;
     id<IASKSettingsStore>  _settingsStore;
@@ -54,16 +72,17 @@
     
     BOOL                    _showCreditsFooter;
     BOOL                    _showDoneButton;
+	
+    NSSet                   *_hiddenKeys;
 }
 
 @property (nonatomic, assign) IBOutlet id delegate;
-@property (nonatomic, retain) IASKSettingsReader *settingsReader;
-@property (nonatomic, retain) id<IASKSettingsStore> settingsStore;
 @property (nonatomic, copy) NSString *file;
 @property (nonatomic, assign) BOOL showCreditsFooter;
 @property (nonatomic, assign) BOOL showDoneButton;
+@property (nonatomic, retain) NSSet *hiddenKeys;
 
 - (void)synchronizeSettings;
-- (IBAction)dismiss:(id)sender;
-
+- (void)dismiss:(id)sender;
+- (void)setHiddenKeys:(NSSet*)hiddenKeys animated:(BOOL)animated;
 @end
