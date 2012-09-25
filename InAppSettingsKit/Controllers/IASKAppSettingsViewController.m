@@ -272,9 +272,8 @@ CGRect IASKCGRectSwap(CGRect rect);
                         rowsInSection++;
                     }
                 }
-                if ((rowsInSection >= [self.settingsReader numberOfRowsForSection:section])) {
+                if (rowsInSection >= [self.settingsReader numberOfRowsForSection:section]) {
                     [hideSections addIndex:section];
-                    NSLog(@"Hiding a section!!!: %d", section);
                 }
             }
 			
@@ -298,7 +297,6 @@ CGRect IASKCGRectSwap(CGRect rect);
                 for (NSIndexPath *indexPath in showIndexPaths) {
                     if (indexPath.section == section) {
                         rowsInSection++;
-                        NSLog(@"show row in section: %d", section);
                     }
                 }
                 if (rowsInSection >= [self.settingsReader numberOfRowsForSection:section]) {
@@ -411,11 +409,6 @@ CGRect IASKCGRectSwap(CGRect rect);
 }
 
 - (NSString *)tableView:(UITableView*)tableView titleForHeaderInSection:(NSInteger)section {
-//    if ([self.settingsReader numberOfRowsForSection:section] == 0)
-//    {
-//        return nil;
-//    }
-
     NSString *header = [self.settingsReader titleForSection:section];
 	if (0 == header.length) {
 		return nil;
@@ -432,11 +425,6 @@ CGRect IASKCGRectSwap(CGRect rect);
 }
 
 - (CGFloat)tableView:(UITableView*)tableView heightForHeaderInSection:(NSInteger)section {
-//    if ([self.settingsReader numberOfRowsForSection:section] == 0)
-//    {
-//        return 0;
-//    }
-
 	if ([self tableView:tableView viewForHeaderInSection:section] && [self.delegate respondsToSelector:@selector(settingsViewController:tableView:heightForHeaderForSection:)]) {
 		CGFloat result;
 		if ((result = [self.delegate settingsViewController:self tableView:tableView heightForHeaderForSection:section])) {
