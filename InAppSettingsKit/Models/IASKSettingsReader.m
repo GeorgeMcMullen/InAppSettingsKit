@@ -75,7 +75,8 @@ hiddenKeys = _hiddenKeys;
                 }
             }
         }
-        
+
+        [settingsReader release];
     }
     //write the changes to disk
     [nsUserDefaults synchronize];
