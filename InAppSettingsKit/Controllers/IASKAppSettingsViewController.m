@@ -436,7 +436,7 @@ CGRect IASKCGRectSwap(CGRect rect);
 	if ((title = [self tableView:tableView titleForHeaderInSection:section])) {
 		CGSize size = [title sizeWithFont:[UIFont boldSystemFontOfSize:[UIFont labelFontSize]] 
 						constrainedToSize:CGSizeMake(tableView.frame.size.width - 2*kIASKHorizontalPaddingGroupTitles, INFINITY)
-							lineBreakMode:UILineBreakModeWordWrap];
+							lineBreakMode:NSLineBreakByWordWrapping];
 		return size.height+kIASKVerticalPaddingGroupTitles;
 	}
 	return 0;
@@ -777,7 +777,19 @@ CGRect IASKCGRectSwap(CGRect rect);
             }
             
             mailViewController.mailComposeDelegate = vc;
-            [vc presentModalViewController:mailViewController animated:YES];
+#if (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#pragma message "Now that we're iOS5 and up, remove this workaround"
+#endif
+            if([vc respondsToSelector:@selector(presentViewController:animated:completion:)]) {
+                [vc presentViewController:mailViewController
+                                   animated:YES
+                                 completion:nil];
+            } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+                [vc presentModalViewController:mailViewController animated:YES];
+#pragma clang diagnostic pop
+            }
             [mailViewController release];
         } else {
             UIAlertView *alert = [[UIAlertView alloc]
@@ -811,8 +823,19 @@ CGRect IASKCGRectSwap(CGRect rect);
                                          error:error];
      }
     
-    // NOTE: No error handling is done here
-    [self dismissModalViewControllerAnimated:YES];
+#if (__IPHONE_OS_VERSION_MIN_REQUIRED >= 50000)
+#pragma message "Now that we're iOS5 and up, remove this workaround"
+#endif
+    if([self respondsToSelector:@selector(dismissViewControllerAnimated:completion:)]) {
+        [self dismissViewControllerAnimated:YES
+                                 completion:nil];
+    } else {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+        [self dismissModalViewControllerAnimated:YES];
+#pragma clang diagnostic pop
+        
+    }
 }
 
 #pragma mark -
