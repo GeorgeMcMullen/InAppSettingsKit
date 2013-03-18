@@ -225,6 +225,9 @@ CGRect IASKCGRectSwap(CGRect rect);
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(shouldAutorotateToInterfaceOrientation:)]) {
+		return [self.delegate shouldAutorotateToInterfaceOrientation:interfaceOrientation];
+	}
     return YES;
 }
 
@@ -234,6 +237,14 @@ CGRect IASKCGRectSwap(CGRect rect);
 	
 	// Release any cached data, images, etc that aren't in use.
 }
+
+- (void)forceShowDoneButton {
+    UIBarButtonItem *buttonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                target:self
+                                                                                action:@selector(dismiss:)];
+    self.navigationItem.rightBarButtonItem = buttonItem;
+    [buttonItem release];
+} 
 
 - (void)setHiddenKeys:(NSSet *)theHiddenKeys {
 	[self setHiddenKeys:theHiddenKeys animated:NO];
