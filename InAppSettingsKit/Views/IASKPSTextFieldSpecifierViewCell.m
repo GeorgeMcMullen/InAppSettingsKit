@@ -61,7 +61,13 @@
 	if (!self.textLabel.text.length) {
 		textFieldFrame.origin.x = kIASKPaddingLeft + imageOffset;
 		textFieldFrame.size.width = self.contentView.bounds.size.width - 2* kIASKPaddingLeft - imageOffset;
-	} else if (_textField.textAlignment == NSTextAlignmentRight) {
+	}
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
+    else if (_textField.textAlignment == NSTextAlignmentRight)
+#else
+    else if (_textField.textAlignment == UITextAlignmentRight)
+#endif
+    {
 		textFieldFrame.origin.x = self.textLabel.frame.origin.x + labelSize.width + kIASKSpacing;
 		textFieldFrame.size.width = _textField.superview.frame.size.width - textFieldFrame.origin.x - kIASKPaddingRight;
 	}

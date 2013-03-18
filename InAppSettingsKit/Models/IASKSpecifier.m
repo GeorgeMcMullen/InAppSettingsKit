@@ -264,17 +264,41 @@
 - (UITextAlignment)textAlignment
 {
     if ([[_specifierDict objectForKey:kIASKTextLabelAlignment] isEqualToString:kIASKTextLabelAlignmentLeft]) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
         return NSTextAlignmentLeft;
+#else
+        return UITextAlignmentLeft;
+#endif
     } else if ([[_specifierDict objectForKey:kIASKTextLabelAlignment] isEqualToString:kIASKTextLabelAlignmentCenter]) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
         return NSTextAlignmentCenter;
+#else
+        return UITextAlignmentCenter;
+#endif
     } else if ([[_specifierDict objectForKey:kIASKTextLabelAlignment] isEqualToString:kIASKTextLabelAlignmentRight]) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
         return NSTextAlignmentRight;
+#else
+        return UITextAlignmentRight;
+#endif
     }
     if ([self.type isEqualToString:kIASKButtonSpecifier] && !self.cellImage) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
 		return NSTextAlignmentCenter;
+#else
+		return UITextAlignmentCenter;
+#endif
 	} else if ([self.type isEqualToString:kIASKPSMultiValueSpecifier] || [self.type isEqualToString:kIASKPSTitleValueSpecifier]) {
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
 		return NSTextAlignmentRight;
+#else
+		return UITextAlignmentRight;
+#endif
 	}
+#if __IPHONE_OS_VERSION_MIN_REQUIRED >= 60000
 	return NSTextAlignmentLeft;
+#else
+	return UITextAlignmentLeft;
+#endif
 }
 @end
